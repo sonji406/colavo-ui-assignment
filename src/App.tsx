@@ -2,7 +2,7 @@ import Cart from './components/Cart';
 
 const App = () => {
   return (
-    <div>
+    <div className='h-full'>
       <Cart />
     </div>
   );
