@@ -1,22 +1,19 @@
+import Footer from './Footer';
+import Header from './Header';
 import ButtonGroup from './ButtonGroup';
-import DiscountList from './DiscountList';
-import NextStepButton from './NextStepButton';
-import PaymentInformation from './PaymentInformation';
 import PaymentList from './PaymentList';
-import TotalAmount from './TotalAmount';
+import DiscountList from './DiscountList';
 
 const Cart = () => {
   return (
-    <div>
-      <div className='flex items-center w-full relative mb-8'>
-        <img src='/images/icon/close_icon.png' alt='Close icon' className='w-6 h-6' />
-        <PaymentInformation />
-      </div>
+    <div className='h-full flex flex-col justify-between pt-4'>
+      <Header />
       <ButtonGroup />
-      <PaymentList />
-      <DiscountList />
-      <TotalAmount />
-      <NextStepButton />
+      <div className='flex-grow px-5 border-solid border-b border-gray-200'>
+        <PaymentList />
+        <DiscountList />
+      </div>
+      <Footer />
     </div>
   );
 };
