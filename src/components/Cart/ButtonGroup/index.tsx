@@ -2,7 +2,7 @@ import Button from './Button';
 
 const ButtonGroup = () => {
   return (
-    <div className='flex gap-x-2 px-5 pb-4 border-b-2 border-dashed border-slate-100'>
+    <div className='flex gap-x-2 mx-5 pb-4 border-b-2 border-dashed border-slate-100'>
       <Button
         icon='/images/icon/gray_plus_icon.png'
         bgColor='bg-gray-100'
