@@ -9,7 +9,7 @@ const Cart = () => {
     <div className='h-full flex flex-col justify-between pt-4'>
       <Header />
       <ButtonGroup />
-      <div className='flex-grow px-5 border-solid border-b border-gray-200'>
+      <div className='flex-grow px-5'>
         <PaymentList />
         <DiscountList />
       </div>
