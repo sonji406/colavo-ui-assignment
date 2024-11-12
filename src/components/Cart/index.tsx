@@ -8,8 +8,8 @@ import TotalAmount from './TotalAmount';
 const Cart = () => {
   return (
     <div>
-      <div className='flex items-center w-full relative'>
-        <img src='/images/icon/close_icon.png' alt='Close icon' className='w-5 h-5' />
+      <div className='flex items-center w-full relative mb-8'>
+        <img src='/images/icon/close_icon.png' alt='Close icon' className='w-6 h-6' />
         <PaymentInformation />
       </div>
       <ButtonGroup />
