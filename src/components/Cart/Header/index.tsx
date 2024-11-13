@@ -1,5 +1,5 @@
-import PaymentInformation from './PaymentInformation';
 import { useViewContext } from 'contexts/ViewContext';
+import PaymentInformation from './PaymentInformation';
 
 const Header = () => {
   const { currentView, changeView } = useViewContext();
@@ -13,9 +13,11 @@ const Header = () => {
       <button onClick={handleCartMain} className='w-6 h-6'>
         <img src='/images/icon/close_icon.png' alt='Close icon' />
       </button>
-      {currentView === 'main' && <PaymentInformation />}
-      {currentView === 'itemMenu' && <div>시술메뉴</div>}
-      {currentView === 'discountMenu' && <div>할인</div>}
+      <div className='absolute left-1/2 transform -translate-x-1/2 text-center'>
+        {currentView === 'main' && <PaymentInformation />}
+        {currentView === 'itemMenu' && <p className='text-xl font-semibold'>시술메뉴</p>}
+        {currentView === 'discountMenu' && <p className='text-xl font-semibold'>할인</p>}
+      </div>
     </div>
   );
 };
