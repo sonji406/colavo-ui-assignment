@@ -2,11 +2,15 @@ import PaymentInformation from './PaymentInformation';
 import { useViewContext } from 'contexts/ViewContext';
 
 const Header = () => {
-  const { currentView } = useViewContext();
+  const { currentView, changeView } = useViewContext();
+
+  const handleCartMain = () => {
+    changeView('main');
+  };
 
   return (
     <div className='flex items-center w-full relative mb-8 px-4'>
-      <button className='w-6 h-6'>
+      <button onClick={handleCartMain} className='w-6 h-6'>
         <img src='/images/icon/close_icon.png' alt='Close icon' />
       </button>
       {currentView === 'main' && <PaymentInformation />}
