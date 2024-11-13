@@ -4,7 +4,7 @@ import TotalAmount from './TotalAmount';
 const Footer = () => {
   return (
     <div className='border-solid border-t-2 border-gray-100 px-5'>
-      <TotalAmount totalAmount={100000} />
+      <TotalAmount totalAmount={135750} />
       <NextStepButton />
     </div>
   );
