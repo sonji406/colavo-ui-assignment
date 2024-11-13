@@ -1,3 +1,4 @@
+import { useViewContext } from 'contexts/ViewContext';
 import CheckoutDiscounts from './CheckoutDiscounts';
 import CheckoutItems from './CheckoutItems';
 
@@ -36,12 +37,17 @@ const discountData = {
 };
 
 const CheckoutList = () => {
+  const { currentView } = useViewContext();
   const totalPrice = Object.values(itemData).reduce((sum, item) => sum + item.price, 0);
 
   return (
     <div className='flex-grow px-5'>
-      <CheckoutItems itemData={Object.values(itemData)} />
-      <CheckoutDiscounts totalPrice={totalPrice} discountData={Object.values(discountData)} />
+      {currentView === 'main' && (
+        <>
+          <CheckoutItems itemData={Object.values(itemData)} />
+          <CheckoutDiscounts totalPrice={totalPrice} discountData={Object.values(discountData)} />
+        </>
+      )}
     </div>
   );
 };
