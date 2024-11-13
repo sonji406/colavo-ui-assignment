@@ -42,7 +42,7 @@ const CheckoutList = () => {
   const totalPrice = Object.values(itemData).reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div className='flex-grow px-5'>
+    <div className='flex-grow px-5 overflow-y-auto'>
       {currentView === 'main' && (
         <>
           <CheckoutItems itemData={Object.values(itemData)} />
