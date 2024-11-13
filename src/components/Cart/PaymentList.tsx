@@ -1,5 +1,3 @@
-import CustomSelect from './CustomSelect';
-
 interface PaymentItem {
   count: number;
   name: string;
@@ -14,6 +12,7 @@ const PaymentList = ({ paymentData }: PaymentListProps) => {
     <div className='pt-4'>
       {Object.keys(paymentData).map((key) => {
         const item = paymentData[key];
+
         return (
           <div key={key} className='flex justify-between items-center mb-4'>
             <div>
@@ -21,9 +20,10 @@ const PaymentList = ({ paymentData }: PaymentListProps) => {
               <p className='text-gray-500 text-xs'>{item.price.toLocaleString()}원</p>
             </div>
             <div>
-              <select>
-                <option value='1'>1</option>
-              </select>
+              <button className='flex bg-gray-100 text-gray-400 text-sm py-1 px-2 rounded-2xl font-medium'>
+                <span>{item.count}</span>
+                <img src='/images/icon/down_icon.png' alt='Down icon' className='w-5 h-5' />
+              </button>
             </div>
           </div>
         );
