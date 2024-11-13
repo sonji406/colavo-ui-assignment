@@ -39,13 +39,15 @@ const discountData = {
 };
 
 const Cart = () => {
+  const totalPrice = Object.values(paymentData).reduce((sum, item) => sum + item.price, 0);
+
   return (
     <div className='h-full flex flex-col justify-between pt-4'>
       <Header />
       <ButtonGroup />
       <div className='flex-grow px-5'>
         <PaymentList paymentData={paymentData} />
-        <DiscountList discountData={discountData} />
+        <DiscountList totalPrice={totalPrice} discountData={discountData} />
       </div>
       <Footer />
     </div>
