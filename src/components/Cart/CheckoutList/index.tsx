@@ -1,6 +1,7 @@
 import { useViewContext } from 'contexts/ViewContext';
 import CheckoutDiscounts from './CheckoutDiscounts';
 import CheckoutItems from './CheckoutItems';
+import ItemMenu from './ItemMenu';
 
 const itemData = {
   i_1: {
@@ -48,6 +49,7 @@ const CheckoutList = () => {
           <CheckoutDiscounts totalPrice={totalPrice} discountData={Object.values(discountData)} />
         </>
       )}
+      {currentView === 'itemMenu' && <ItemMenu />}
     </div>
   );
 };
