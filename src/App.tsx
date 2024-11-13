@@ -1,11 +1,11 @@
-import React from 'react';
+import Cart from './components/Cart';
 
-function App() {
+const App = () => {
   return (
-    <div>
-      <header></header>
+    <div className='h-full'>
+      <Cart />
     </div>
   );
-}
+};
 
 export default App;
