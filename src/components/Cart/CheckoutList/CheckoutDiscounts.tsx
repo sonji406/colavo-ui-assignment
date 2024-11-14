@@ -4,7 +4,7 @@ const CheckoutDiscounts = () => {
   const { checkoutDiscounts, totalPrice } = useCartContext();
 
   return (
-    <div className='pt-4'>
+    <div>
       {checkoutDiscounts.map((discount) => {
         return (
           <div key={discount.id} className='flex justify-between items-center mb-4'>

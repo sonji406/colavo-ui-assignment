@@ -59,7 +59,7 @@ const CheckoutList = () => {
   }, []);
 
   return (
-    <div className='flex-grow px-5 overflow-y-auto'>
+    <div className='flex-grow px-5 pt-4 overflow-y-auto'>
       {currentView === 'main' && (
         <>
           <CheckoutItems />
