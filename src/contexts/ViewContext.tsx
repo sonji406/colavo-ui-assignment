@@ -7,11 +7,7 @@ interface ViewContextProps {
 
 const ViewContext = createContext<ViewContextProps | undefined>(undefined);
 
-interface ViewProviderProps {
-  children: ReactNode;
-}
-
-const ViewProvider = ({ children }: ViewProviderProps) => {
+const ViewProvider = ({ children }: { children: ReactNode }) => {
   const [currentView, setCurrentView] = useState<string>('main');
 
   const changeView = (view: string) => {
