@@ -1,11 +1,14 @@
 import { useViewContext } from 'contexts/ViewContext';
 import PaymentInformation from './PaymentInformation';
+import { useCartContext } from 'contexts/CartContext';
 
 const Header = () => {
   const { currentView, changeView } = useViewContext();
+  const { cancelSelected } = useCartContext();
 
   const handleCartMain = () => {
     changeView('main');
+    cancelSelected();
   };
 
   return (

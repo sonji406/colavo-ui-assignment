@@ -6,12 +6,12 @@ interface ItemMenuProps {
 }
 
 const ItemMenu = ({ items, currencyCode }: ItemMenuProps) => {
-  const { checkoutItems, handleCheckoutItems } = useCartContext();
+  const { selectedItems, selectItem } = useCartContext();
 
   const toggleCheckoutItem = (itemId: string) => {
     const selectedItem = items.find((item) => item.id === itemId);
     if (selectedItem) {
-      handleCheckoutItems(selectedItem);
+      selectItem(selectedItem);
     }
   };
 
@@ -30,7 +30,7 @@ const ItemMenu = ({ items, currencyCode }: ItemMenuProps) => {
                 {currencyCode === 'KRW' ? item.price.toLocaleString() + '원' : '$'}
               </p>
             </div>
-            {checkoutItems.find((checkoutItem) => checkoutItem.id === item.id) && (
+            {selectedItems.find((selectedItem) => selectedItem.id === item.id) && (
               <div className='w-8 h-8 flex-shrink-0'>
                 <img src='/images/icon/check_icon.png' alt='Check icon' />
               </div>

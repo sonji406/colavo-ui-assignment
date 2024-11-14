@@ -14,52 +14,79 @@ interface Discount {
 }
 
 interface CartContextProps {
+  selectedItems: Item[];
+  selectedDiscounts: Discount[];
   checkoutItems: Item[];
   checkoutDiscounts: Discount[];
+  totalPrice: number;
+  totalRate: number;
   totalAmount: number;
-  handleCheckoutItems: (item: Item) => void;
-  handleCheckoutDiscounts: (discount: Discount) => void;
+  selectItem: (item: Item) => void;
+  selectDiscount: (discount: Discount) => void;
+  completedSelections: () => void;
+  cancelSelected: () => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+  const [selectedDiscounts, setSelectedDiscounts] = useState<Discount[]>([]);
   const [checkoutItems, setCheckoutItems] = useState<Item[]>([]);
   const [checkoutDiscounts, setCheckoutDiscounts] = useState<Discount[]>([]);
-  const [totalAmount, seTotalAmount] = useState<number>(0);
+  const [totalPrice, seTotalPrice] = useState<number>(0);
+  const [totalRate, setTotalRate] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
 
-  const handleCheckoutItems = (item: Item) => {
-    setCheckoutItems((currentItems) => {
+  const selectItem = (item: Item) => {
+    setSelectedItems((currentItems) => {
       const foundItem = currentItems.find((i) => i.id === item.id);
-      const updatedItems = foundItem
-        ? currentItems.filter((i) => i.id !== item.id)
-        : [...currentItems, item];
-
-      setCheckoutItems(updatedItems);
-      return updatedItems;
+      return foundItem ? currentItems.filter((i) => i.id !== item.id) : [...currentItems, item];
     });
   };
 
-  const handleCheckoutDiscounts = (discount: Discount) => {
-    setCheckoutDiscounts((currentDiscounts) => {
+  const selectDiscount = (discount: Discount) => {
+    setSelectedDiscounts((currentDiscounts) => {
       const foundDiscount = currentDiscounts.find((d) => d.id === discount.id);
-      const updateDiscounts = foundDiscount
+      return foundDiscount
         ? currentDiscounts.filter((d) => d.id !== discount.id)
         : [...currentDiscounts, discount];
-
-      setCheckoutDiscounts(updateDiscounts);
-      return updateDiscounts;
     });
+  };
+
+  const completedSelections = () => {
+    setCheckoutItems(selectedItems);
+    setCheckoutDiscounts(selectedDiscounts);
+
+    const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+
+    const totalRate =
+      Math.round(selectedDiscounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
+
+    seTotalPrice(totalPrice);
+    setTotalRate(totalRate);
+    setTotalAmount(totalPrice - totalPrice * totalRate);
+  };
+
+  const cancelSelected = () => {
+    setSelectedItems(checkoutItems);
+    setSelectedDiscounts(checkoutDiscounts);
   };
 
   return (
     <CartContext.Provider
       value={{
+        selectedItems,
+        selectedDiscounts,
         checkoutItems,
         checkoutDiscounts,
+        totalPrice,
+        totalRate,
         totalAmount,
-        handleCheckoutItems,
-        handleCheckoutDiscounts,
+        selectItem,
+        selectDiscount,
+        completedSelections,
+        cancelSelected,
       }}
     >
       {children}

@@ -5,12 +5,12 @@ interface DiscountMenuProps {
 }
 
 const DiscountMenu = ({ discounts }: DiscountMenuProps) => {
-  const { checkoutDiscounts, handleCheckoutDiscounts } = useCartContext();
+  const { selectedDiscounts, selectDiscount } = useCartContext();
 
   const toggleCheckoutDiscount = (discountId: string) => {
     const selectedDiscout = discounts.find((discount) => discount.id === discountId);
     if (selectedDiscout) {
-      handleCheckoutDiscounts(selectedDiscout);
+      selectDiscount(selectedDiscout);
     }
   };
 
@@ -27,7 +27,7 @@ const DiscountMenu = ({ discounts }: DiscountMenuProps) => {
               <p className='text-lg'>{discount.name}</p>
               <p className='text-pink-500 text-sm'>{discount.rate.toLocaleString()}%</p>
             </div>
-            {checkoutDiscounts.find((checkoutDiscount) => checkoutDiscount.id === discount.id) && (
+            {selectedDiscounts.find((selectedDiscount) => selectedDiscount.id === discount.id) && (
               <div className='w-8 h-8 flex-shrink-0'>
                 <img src='/images/icon/check_icon.png' alt='Check icon' />
               </div>

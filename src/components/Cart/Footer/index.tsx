@@ -12,7 +12,7 @@ const Footer = () => {
     >
       {currentView === 'main' ? (
         <>
-          <TotalAmount totalAmount={135750} />
+          <TotalAmount />
           <NextStepButton />
         </>
       ) : (

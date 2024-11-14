@@ -1,7 +1,7 @@
 import { useCartContext } from 'contexts/CartContext';
 
 const CheckoutDiscounts = () => {
-  const { checkoutDiscounts, totalAmount } = useCartContext();
+  const { checkoutDiscounts, totalPrice } = useCartContext();
 
   return (
     <div className='pt-4'>
@@ -11,7 +11,7 @@ const CheckoutDiscounts = () => {
             <div>
               <p className='text-sm'>{discount.name}</p>
               <p className='text-pink-500 text-xs'>
-                {(totalAmount * discount.rate * -1).toLocaleString()}원 (
+                {(totalPrice * discount.rate * -1).toLocaleString()}원 (
                 {Math.round(discount.rate * 100)}%)
               </p>
             </div>
