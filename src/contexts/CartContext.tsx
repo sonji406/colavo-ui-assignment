@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface Item {
   id: string;
@@ -30,27 +30,54 @@ interface CartContextProps {
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-  const [selectedDiscounts, setSelectedDiscounts] = useState<Discount[]>([]);
-  const [checkoutItems, setCheckoutItems] = useState<Item[]>([]);
-  const [checkoutDiscounts, setCheckoutDiscounts] = useState<Discount[]>([]);
-  const [totalPrice, seTotalPrice] = useState<number>(0);
-  const [totalRate, setTotalRate] = useState<number>(0);
-  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const getDataLocalStorage = (key: string, defaultValue: any) => {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : defaultValue;
+  };
+
+  const [selectedItems, setSelectedItems] = useState<Item[]>(() =>
+    getDataLocalStorage('selectedItems', []),
+  );
+  const [selectedDiscounts, setSelectedDiscounts] = useState<Discount[]>(() =>
+    getDataLocalStorage('selectedDiscounts', []),
+  );
+  const [checkoutItems, setCheckoutItems] = useState<Item[]>(() =>
+    getDataLocalStorage('checkoutItems', []),
+  );
+  const [checkoutDiscounts, setCheckoutDiscounts] = useState<Discount[]>(() =>
+    getDataLocalStorage('checkoutDiscounts', []),
+  );
+  const [totalPrice, setTotalPrice] = useState<number>(() => getDataLocalStorage('totalPrice', 0));
+  const [totalRate, setTotalRate] = useState<number>(() => getDataLocalStorage('totalRate', 0));
+  const [totalAmount, setTotalAmount] = useState<number>(() =>
+    getDataLocalStorage('totalAmount', 0),
+  );
+
+  const setDataLocalStorage = (key: string, value: any) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
 
   const selectItem = (item: Item) => {
     setSelectedItems((currentItems) => {
       const foundItem = currentItems.find((i) => i.id === item.id);
-      return foundItem ? currentItems.filter((i) => i.id !== item.id) : [...currentItems, item];
+      const addItems = foundItem
+        ? currentItems.filter((i) => i.id !== item.id)
+        : [...currentItems, item];
+
+      setDataLocalStorage('selectedItems', addItems);
+      return addItems;
     });
   };
 
   const selectDiscount = (discount: Discount) => {
     setSelectedDiscounts((currentDiscounts) => {
       const foundDiscount = currentDiscounts.find((d) => d.id === discount.id);
-      return foundDiscount
+      const addDiscount = foundDiscount
         ? currentDiscounts.filter((d) => d.id !== discount.id)
         : [...currentDiscounts, discount];
+
+      setDataLocalStorage('selectedDiscounts', addDiscount);
+      return addDiscount;
     });
   };
 
@@ -63,15 +90,41 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     const totalRate =
       Math.round(selectedDiscounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
 
-    seTotalPrice(totalPrice);
+    const totalAmount = totalPrice - totalPrice * totalRate;
+
+    setTotalPrice(totalPrice);
     setTotalRate(totalRate);
-    setTotalAmount(totalPrice - totalPrice * totalRate);
+    setTotalAmount(totalAmount);
+
+    setDataLocalStorage('checkoutItems', selectedItems);
+    setDataLocalStorage('checkoutDiscounts', selectedDiscounts);
+    setDataLocalStorage('totalPrice', totalPrice);
+    setDataLocalStorage('totalRate', totalRate);
+    setDataLocalStorage('totalAmount', totalAmount);
   };
 
   const cancelSelected = () => {
     setSelectedItems(checkoutItems);
     setSelectedDiscounts(checkoutDiscounts);
   };
+
+  useEffect(() => {
+    setDataLocalStorage('selectedItems', selectedItems);
+    setDataLocalStorage('selectedDiscounts', selectedDiscounts);
+    setDataLocalStorage('checkoutItems', checkoutItems);
+    setDataLocalStorage('checkoutDiscounts', checkoutDiscounts);
+    setDataLocalStorage('totalPrice', totalPrice);
+    setDataLocalStorage('totalRate', totalRate);
+    setDataLocalStorage('totalAmount', totalAmount);
+  }, [
+    selectedItems,
+    selectedDiscounts,
+    checkoutItems,
+    checkoutDiscounts,
+    totalPrice,
+    totalRate,
+    totalAmount,
+  ]);
 
   return (
     <CartContext.Provider
