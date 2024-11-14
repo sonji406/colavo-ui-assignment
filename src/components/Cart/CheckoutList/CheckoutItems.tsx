@@ -1,12 +1,12 @@
-interface CheckoutItemsProps {
-  itemData: { count: number; name: string; price: number }[];
-}
+import { useCartContext } from 'contexts/CartContext';
 
-const CheckoutItems = ({ itemData }: CheckoutItemsProps) => {
+const CheckoutItems = () => {
+  const { checkoutItems } = useCartContext();
+
   return (
     <div className='pt-4'>
-      {itemData.map((item, index) => (
-        <div key={index} className='flex justify-between items-center mb-4'>
+      {checkoutItems.map((item) => (
+        <div key={item.id} className='flex justify-between items-center mb-4'>
           <div>
             <p className='text-sm'>{item.name}</p>
             <p className='text-gray-500 text-xs'>{item.price.toLocaleString()}원</p>
