@@ -1,8 +1,8 @@
-interface TotalAmountProps {
-  totalAmount: number;
-}
+import { useCartContext } from 'contexts/CartContext';
 
-const TotalAmount = ({ totalAmount }: TotalAmountProps) => {
+const TotalAmount = () => {
+  const { totalAmount } = useCartContext();
+
   return (
     <div className='flex justify-between items-center py-4 font-normal'>
       <p className='text-base text-zinc-400'>합계</p>

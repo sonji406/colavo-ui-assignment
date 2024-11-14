@@ -1,14 +1,13 @@
-interface CheckoutDiscountsProps {
-  totalPrice: number;
-  discountData: { name: string; rate: number }[];
-}
+import { useCartContext } from 'contexts/CartContext';
 
-const CheckoutDiscounts = ({ totalPrice, discountData }: CheckoutDiscountsProps) => {
+const CheckoutDiscounts = () => {
+  const { checkoutDiscounts, totalPrice } = useCartContext();
+
   return (
-    <div className='pt-4'>
-      {discountData.map((discount, index) => {
+    <div>
+      {checkoutDiscounts.map((discount) => {
         return (
-          <div key={index} className='flex justify-between items-center mb-4'>
+          <div key={discount.id} className='flex justify-between items-center mb-4'>
             <div>
               <p className='text-sm'>{discount.name}</p>
               <p className='text-pink-500 text-xs'>
@@ -16,7 +15,7 @@ const CheckoutDiscounts = ({ totalPrice, discountData }: CheckoutDiscountsProps)
                 {Math.round(discount.rate * 100)}%)
               </p>
             </div>
-            <div>
+            <div className='flex-shrink-0'>
               <button className='flex bg-gray-100 text-gray-400 text-sm py-1 px-2 rounded-2xl font-medium'>
                 <span>수정</span>
                 <img src='/images/icon/down_icon.png' alt='Down icon' className='w-5 h-5' />

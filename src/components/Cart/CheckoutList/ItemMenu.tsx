@@ -1,56 +1,42 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useCartContext } from 'contexts/CartContext';
 
-interface Item {
-  name: string;
-  price: number;
-  count: number;
+interface ItemMenuProps {
+  items: { id: string; name: string; price: number; count: number }[];
+  currencyCode: string;
 }
 
-interface Discount {
-  name: string;
-  rate: number;
-}
+const ItemMenu = ({ items, currencyCode }: ItemMenuProps) => {
+  const { selectedItems, selectItem } = useCartContext();
 
-const ItemMenu = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [discounts, setDiscounts] = useState<Discount[]>([]);
-  const [currencyCode, setCurrencyCode] = useState<string>('');
-  const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    const getResponseData = async () => {
-      try {
-        const response = await axios.get(
-          'https://us-central1-colavolab.cloudfunctions.net/requestAssignmentCalculatorData',
-        );
-
-        const { data } = response;
-
-        setItems(Object.values(data.items));
-        setDiscounts(Object.values(data.discounts));
-        setCurrencyCode(data.currency_code);
-      } catch (error) {
-        setError('데이터 불러오기 실패');
-      }
-    };
-
-    getResponseData();
-  }, []);
+  const toggleCheckoutItem = (itemId: string) => {
+    const selectedItem = items.find((item) => item.id === itemId);
+    if (selectedItem) {
+      selectItem(selectedItem);
+    }
+  };
 
   return (
     <div>
-      {items.map((item, index) => (
-        <div key={index} className='flex justify-between mb-4'>
-          <div>
-            <p className='text-lg'>{item.name}</p>
-            <p className='text-gray-500 text-base'>{item.price.toLocaleString()}원</p>
+      {items &&
+        items.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => toggleCheckoutItem(item.id)}
+            className='flex justify-between mb-4'
+          >
+            <div>
+              <p className='text-lg'>{item.name}</p>
+              <p className='text-gray-500 text-base'>
+                {currencyCode === 'KRW' ? item.price.toLocaleString() + '원' : '$'}
+              </p>
+            </div>
+            {selectedItems.find((selectedItem) => selectedItem.id === item.id) && (
+              <div className='w-8 h-8 flex-shrink-0'>
+                <img src='/images/icon/check_icon.png' alt='Check icon' />
+              </div>
+            )}
           </div>
-          <div className='w-8 h-8 flex-shrink-0'>
-            <img src='/images/icon/check_icon.png' alt='Check icon' />
-          </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };
