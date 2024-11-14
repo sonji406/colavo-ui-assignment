@@ -20,17 +20,6 @@ interface Discount {
   rate: number;
 }
 
-const discountData = {
-  d_1: {
-    name: '지인 할인',
-    rate: 0.08,
-  },
-  d_2: {
-    name: '학생 할인',
-    rate: 0.07,
-  },
-};
-
 const CheckoutList = () => {
   const { currentView } = useViewContext();
 
@@ -74,7 +63,7 @@ const CheckoutList = () => {
       {currentView === 'main' && (
         <>
           <CheckoutItems />
-          <CheckoutDiscounts totalPrice={100000} discountData={Object.values(discountData)} />
+          <CheckoutDiscounts />
         </>
       )}
       {error ? <p className='text-center'>{error}</p> : ''}

@@ -1,18 +1,17 @@
-interface CheckoutDiscountsProps {
-  totalPrice: number;
-  discountData: { name: string; rate: number }[];
-}
+import { useCartContext } from 'contexts/CartContext';
 
-const CheckoutDiscounts = ({ totalPrice, discountData }: CheckoutDiscountsProps) => {
+const CheckoutDiscounts = () => {
+  const { checkoutDiscounts, totalAmount } = useCartContext();
+
   return (
     <div className='pt-4'>
-      {discountData.map((discount, index) => {
+      {checkoutDiscounts.map((discount) => {
         return (
-          <div key={index} className='flex justify-between items-center mb-4'>
+          <div key={discount.id} className='flex justify-between items-center mb-4'>
             <div>
               <p className='text-sm'>{discount.name}</p>
               <p className='text-pink-500 text-xs'>
-                {(totalPrice * discount.rate * -1).toLocaleString()}원 (
+                {(totalAmount * discount.rate * -1).toLocaleString()}원 (
                 {Math.round(discount.rate * 100)}%)
               </p>
             </div>
