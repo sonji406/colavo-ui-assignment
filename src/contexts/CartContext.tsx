@@ -18,6 +18,7 @@ interface CartContextProps {
   checkoutDiscounts: Discount[];
   totalAmount: number;
   handleCheckoutItems: (item: Item) => void;
+  handleCheckoutDiscounts: (discount: Discount) => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -39,6 +40,18 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const handleCheckoutDiscounts = (discount: Discount) => {
+    setCheckoutDiscounts((currentDiscounts) => {
+      const foundDiscount = currentDiscounts.find((d) => d.id === discount.id);
+      const updateDiscounts = foundDiscount
+        ? currentDiscounts.filter((d) => d.id !== discount.id)
+        : [...currentDiscounts, discount];
+
+      setCheckoutDiscounts(updateDiscounts);
+      return updateDiscounts;
+    });
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -46,6 +59,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         checkoutDiscounts,
         totalAmount,
         handleCheckoutItems,
+        handleCheckoutDiscounts,
       }}
     >
       {children}
