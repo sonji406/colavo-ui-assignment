@@ -1,43 +1,8 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-
-interface Item {
-  name: string;
-  price: number;
-  count: number;
+interface ItemMenuProps {
+  items: { name: string; price: number }[];
 }
 
-interface Discount {
-  name: string;
-  rate: number;
-}
-
-const ItemMenu = () => {
-  const [items, setItems] = useState<Item[]>([]);
-  const [discounts, setDiscounts] = useState<Discount[]>([]);
-  const [currencyCode, setCurrencyCode] = useState<string>('');
-  const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    const getResponseData = async () => {
-      try {
-        const response = await axios.get(
-          'https://us-central1-colavolab.cloudfunctions.net/requestAssignmentCalculatorData',
-        );
-
-        const { data } = response;
-
-        setItems(Object.values(data.items));
-        setDiscounts(Object.values(data.discounts));
-        setCurrencyCode(data.currency_code);
-      } catch (error) {
-        setError('데이터 불러오기 실패');
-      }
-    };
-
-    getResponseData();
-  }, []);
-
+const ItemMenu = ({ items }: ItemMenuProps) => {
   return (
     <div>
       {items.map((item, index) => (

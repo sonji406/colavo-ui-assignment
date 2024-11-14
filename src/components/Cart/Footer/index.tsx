@@ -10,13 +10,14 @@ const Footer = () => {
     <div
       className={`px-5 pb-12 ${currentView !== 'main' ? 'bg-violet-400' : 'border-solid border-t-2 border-gray-100'}`}
     >
-      {currentView === 'main' && (
+      {currentView === 'main' ? (
         <>
           <TotalAmount totalAmount={135750} />
           <NextStepButton />
         </>
+      ) : (
+        <CompleteButton />
       )}
-      {currentView === 'itemMenu' && <CompleteButton />}
     </div>
   );
 };
