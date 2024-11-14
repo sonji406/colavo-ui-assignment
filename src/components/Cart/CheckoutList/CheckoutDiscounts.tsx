@@ -15,7 +15,7 @@ const CheckoutDiscounts = () => {
                 {Math.round(discount.rate * 100)}%)
               </p>
             </div>
-            <div>
+            <div className='flex-shrink-0'>
               <button className='flex bg-gray-100 text-gray-400 text-sm py-1 px-2 rounded-2xl font-medium'>
                 <span>수정</span>
                 <img src='/images/icon/down_icon.png' alt='Down icon' className='w-5 h-5' />
