@@ -18,6 +18,7 @@ interface Discount {
   id: string;
   name: string;
   rate: number;
+  items: Item[];
 }
 
 const CheckoutList = () => {
@@ -47,6 +48,7 @@ const CheckoutList = () => {
           Object.entries(data.discounts).map(([key, discount]) => ({
             id: key,
             ...(discount as Omit<Discount, 'id'>),
+            items: [],
           })),
         );
         setCurrencyCode(data.currency_code);

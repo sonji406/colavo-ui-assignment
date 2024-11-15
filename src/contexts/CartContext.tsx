@@ -11,6 +11,7 @@ interface Discount {
   id: string;
   name: string;
   rate: number;
+  items: Item[];
 }
 
 interface CartContextProps {
@@ -52,6 +53,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     getDataLocalStorage('checkoutDiscounts', []),
   );
   const [updateCountItems, setUpdateCountItems] = useState<Item[]>([]);
+
   const [totalPrice, setTotalPrice] = useState<number>(() => getDataLocalStorage('totalPrice', 0));
   const [totalRate, setTotalRate] = useState<number>(() => getDataLocalStorage('totalRate', 0));
   const [totalAmount, setTotalAmount] = useState<number>(() =>
@@ -79,7 +81,13 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
       const foundDiscount = currentDiscounts.find((d) => d.id === discount.id);
       const addDiscount = foundDiscount
         ? currentDiscounts.filter((d) => d.id !== discount.id)
-        : [...currentDiscounts, discount];
+        : [
+            ...currentDiscounts,
+            {
+              ...discount,
+              items: checkoutItems,
+            },
+          ];
 
       setDataLocalStorage('selectedDiscounts', addDiscount);
       return addDiscount;

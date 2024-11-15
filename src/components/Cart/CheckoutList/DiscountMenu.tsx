@@ -1,7 +1,13 @@
 import { useCartContext } from 'contexts/CartContext';
 
+interface Item {
+  id: string;
+  count: number;
+  name: string;
+  price: number;
+}
 interface DiscountMenuProps {
-  discounts: { id: string; name: string; rate: number }[];
+  discounts: { id: string; name: string; rate: number; items: Item[] }[];
 }
 
 const DiscountMenu = ({ discounts }: DiscountMenuProps) => {
@@ -9,6 +15,7 @@ const DiscountMenu = ({ discounts }: DiscountMenuProps) => {
 
   const toggleCheckoutDiscount = (discountId: string) => {
     const selectedDiscout = discounts.find((discount) => discount.id === discountId);
+
     if (selectedDiscout) {
       selectDiscount(selectedDiscout);
     }
