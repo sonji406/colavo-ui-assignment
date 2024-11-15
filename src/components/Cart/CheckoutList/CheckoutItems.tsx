@@ -6,10 +6,20 @@ const CheckoutItems = () => {
   const [isOpenCount, setIsOpenCount] = useState<{ [id: string]: boolean }>({});
 
   const handleCountModal = (id: string) => {
-    setIsOpenCount((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
+    setIsOpenCount((prevState) => {
+      const newState = Object.keys(prevState).reduce(
+        (acc, key) => {
+          acc[key] = false;
+          return acc;
+        },
+        {} as { [key: string]: boolean },
+      );
+
+      return {
+        ...newState,
+        [id]: !prevState[id],
+      };
+    });
   };
 
   const completedChange = (id: string) => {
@@ -27,7 +37,7 @@ const CheckoutItems = () => {
             <p className='text-sm'>{item.name}</p>
             <p className='text-gray-500 text-xs'>{item.price.toLocaleString()}원</p>
           </div>
-          <div className='flex-shrink-0'>
+          <div className='flex-shrink-0 relative'>
             <button
               onClick={() => handleCountModal(item.id)}
               className='flex bg-gray-100 text-gray-400 text-sm py-1 px-2 rounded-2xl font-medium'
@@ -36,24 +46,27 @@ const CheckoutItems = () => {
               <img src='/images/icon/down_icon.png' alt='Down icon' className='w-5 h-5' />
             </button>
             {isOpenCount[item.id] && (
-              <div>
-                <p>{item.name}</p>
+              <div className='border-solid border w-40 absolute top-full mt-2 left-0 -ml-28 z-10 bg-white shadow-lg'>
+                <p className='py-4 pl-2'>{item.name}</p>
                 <select
                   size={5}
                   onChange={(e) => {
                     const updatedCount = Number(e.target.value);
                     handleItemCount(item.id, updatedCount);
                   }}
+                  className='border-solid border-y w-full'
                 >
                   {counts.map((count) => (
-                    <option key={count} value={count}>
+                    <option key={count} value={count} className='text-center'>
                       {count}
                     </option>
                   ))}
                 </select>
-                <div className='flex'>
-                  <button>삭제</button>
-                  <button onClick={() => completedChange(item.id)}>완료</button>
+                <div className='flex w-full text-center py-2'>
+                  <button className='basis-1/2 text-pink-400 border-r'>삭제</button>
+                  <button onClick={() => completedChange(item.id)} className='basis-1/2'>
+                    완료
+                  </button>
                 </div>
               </div>
             )}
