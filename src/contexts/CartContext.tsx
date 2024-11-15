@@ -23,6 +23,7 @@ interface CartContextProps {
   totalPrice: number;
   totalRate: number;
   totalAmount: number;
+  currencyCode: string;
   selectItem: (item: Item) => void;
   selectDiscount: (discount: Discount) => void;
   handleItemCount: (id: string, count: number) => void;
@@ -30,6 +31,7 @@ interface CartContextProps {
   completedUpdateCount: () => void;
   removeItem: (id: string) => void;
   cancelSelected: () => void;
+  handlecurrency: (code: string) => void;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -59,6 +61,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
   const [totalAmount, setTotalAmount] = useState<number>(() =>
     getDataLocalStorage('totalAmount', 0),
   );
+  const [currencyCode, setCurrencyCode] = useState<string>('');
 
   const setDataLocalStorage = (key: string, value: any) => {
     localStorage.setItem(key, JSON.stringify(value));
@@ -160,6 +163,10 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     setSelectedDiscounts(checkoutDiscounts);
   };
 
+  const handlecurrency = (code: string) => {
+    setCurrencyCode(code);
+  };
+
   useEffect(() => {
     const updatedSelectedItems = checkoutItems.filter((item) =>
       selectedItems.find((selectedItem) => selectedItem.id === item.id),
@@ -196,6 +203,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         totalPrice,
         totalRate,
         totalAmount,
+        currencyCode,
         selectItem,
         selectDiscount,
         handleItemCount,
@@ -203,6 +211,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         completedUpdateCount,
         removeItem,
         cancelSelected,
+        handlecurrency,
       }}
     >
       {children}

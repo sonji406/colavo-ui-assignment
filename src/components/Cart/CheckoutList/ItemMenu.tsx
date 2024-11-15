@@ -2,10 +2,9 @@ import { useCartContext } from 'contexts/CartContext';
 
 interface ItemMenuProps {
   items: { id: string; name: string; price: number; count: number }[];
-  currencyCode: string;
 }
 
-const ItemMenu = ({ items, currencyCode }: ItemMenuProps) => {
+const ItemMenu = ({ items }: ItemMenuProps) => {
   const { selectedItems, selectItem } = useCartContext();
 
   const toggleCheckoutItem = (itemId: string) => {
@@ -26,9 +25,7 @@ const ItemMenu = ({ items, currencyCode }: ItemMenuProps) => {
           >
             <div>
               <p className='text-lg'>{item.name}</p>
-              <p className='text-gray-500 text-base'>
-                {currencyCode === 'KRW' ? item.price.toLocaleString() + '원' : '$'}
-              </p>
+              <p className='text-gray-500 text-base'>{item.price.toLocaleString()} 원</p>
             </div>
             {selectedItems.find((selectedItem) => selectedItem.id === item.id) && (
               <div className='w-8 h-8 flex-shrink-0'>

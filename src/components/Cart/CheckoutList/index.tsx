@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useViewContext } from 'contexts/ViewContext';
+import { useCartContext } from 'contexts/CartContext';
 
 import ItemMenu from './ItemMenu';
 import DiscountMenu from './DiscountMenu';
@@ -23,10 +24,10 @@ interface Discount {
 
 const CheckoutList = () => {
   const { currentView } = useViewContext();
+  const { handlecurrency } = useCartContext();
 
   const [items, setItems] = useState<Item[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
-  const [currencyCode, setCurrencyCode] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const CheckoutList = () => {
             items: [],
           })),
         );
-        setCurrencyCode(data.currency_code);
+        handlecurrency(data.currency_code);
       } catch (error) {
         setError('데이터 불러오기 실패');
       }
@@ -69,7 +70,7 @@ const CheckoutList = () => {
         </>
       )}
       {error ? <p className='text-center'>{error}</p> : ''}
-      {currentView === 'itemMenu' && <ItemMenu items={items} currencyCode={currencyCode} />}
+      {currentView === 'itemMenu' && <ItemMenu items={items} />}
       {currentView === 'discountMenu' && <DiscountMenu discounts={discounts} />}
     </div>
   );
