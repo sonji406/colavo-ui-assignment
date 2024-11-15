@@ -100,7 +100,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     setCheckoutItems(itemsToCheckout);
     setCheckoutDiscounts(selectedDiscounts);
 
-    const totalPrice = selectedItems.reduce((sum, item) => sum + item.price * item.count, 0);
+    const totalPrice = itemsToCheckout.reduce((sum, item) => sum + item.price * item.count, 0);
 
     const totalRate =
       Math.round(selectedDiscounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
@@ -111,7 +111,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     setTotalRate(totalRate);
     setTotalAmount(totalAmount);
 
-    setDataLocalStorage('checkoutItems', selectedItems);
+    setDataLocalStorage('checkoutItems', itemsToCheckout);
     setDataLocalStorage('checkoutDiscounts', selectedDiscounts);
     setDataLocalStorage('totalPrice', totalPrice);
     setDataLocalStorage('totalRate', totalRate);
