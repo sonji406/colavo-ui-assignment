@@ -2,7 +2,7 @@ import { useCartContext } from 'contexts/CartContext';
 import { useState } from 'react';
 
 const CheckoutItems = () => {
-  const { checkoutItems, handleItemCount, completedSelections } = useCartContext();
+  const { checkoutItems, handleItemCount, completedUpdateCount, removeItem } = useCartContext();
   const [isOpenCount, setIsOpenCount] = useState<{ [id: string]: boolean }>({});
 
   const handleCountModal = (id: string) => {
@@ -24,7 +24,7 @@ const CheckoutItems = () => {
 
   const completedChange = (id: string) => {
     handleCountModal(id);
-    completedSelections();
+    completedUpdateCount();
   };
 
   const counts = Array.from({ length: 100 }, (_, i) => i + 1);
@@ -63,7 +63,12 @@ const CheckoutItems = () => {
                   ))}
                 </select>
                 <div className='flex w-full text-center py-2'>
-                  <button className='basis-1/2 text-pink-400 border-r'>삭제</button>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className='basis-1/2 text-pink-400 border-r'
+                  >
+                    삭제
+                  </button>
                   <button onClick={() => completedChange(item.id)} className='basis-1/2'>
                     완료
                   </button>
