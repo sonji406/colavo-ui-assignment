@@ -18,12 +18,16 @@ interface CartContextProps {
   selectedDiscounts: Discount[];
   checkoutItems: Item[];
   checkoutDiscounts: Discount[];
+  updateCountItems: Item[];
   totalPrice: number;
   totalRate: number;
   totalAmount: number;
   selectItem: (item: Item) => void;
   selectDiscount: (discount: Discount) => void;
+  handleItemCount: (id: string, count: number) => void;
   completedSelections: () => void;
+  completedUpdateCount: () => void;
+  removeItem: (id: string) => void;
   cancelSelected: () => void;
 }
 
@@ -47,6 +51,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
   const [checkoutDiscounts, setCheckoutDiscounts] = useState<Discount[]>(() =>
     getDataLocalStorage('checkoutDiscounts', []),
   );
+  const [updateCountItems, setUpdateCountItems] = useState<Item[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(() => getDataLocalStorage('totalPrice', 0));
   const [totalRate, setTotalRate] = useState<number>(() => getDataLocalStorage('totalRate', 0));
   const [totalAmount, setTotalAmount] = useState<number>(() =>
@@ -81,32 +86,78 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const completedSelections = () => {
-    setCheckoutItems(selectedItems);
-    setCheckoutDiscounts(selectedDiscounts);
+  const handleItemCount = (id: string, updateCount: number) => {
+    setUpdateCountItems(() => {
+      const updatedItems = checkoutItems.map((item) =>
+        item.id === id ? { ...item, count: updateCount } : item,
+      );
 
-    const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+      return updatedItems;
+    });
+  };
 
+  const calculateTotals = (items: Item[], discounts: Discount[]) => {
+    const totalPrice = items.reduce((sum, item) => sum + item.price * item.count, 0);
     const totalRate =
-      Math.round(selectedDiscounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
-
+      Math.round(discounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
     const totalAmount = totalPrice - totalPrice * totalRate;
 
+    return { totalPrice, totalRate, totalAmount };
+  };
+
+  const checkoutUpdates = (itemsToCheckout: Item[], selectedDiscounts: Discount[]) => {
+    const { totalPrice, totalRate, totalAmount } = calculateTotals(
+      itemsToCheckout,
+      selectedDiscounts,
+    );
+
+    const updatedSelectedItems = selectedItems.map((item) => {
+      const updatedItem = itemsToCheckout.find((checkoutItem) => checkoutItem.id === item.id);
+      return updatedItem ? updatedItem : item;
+    });
+
+    setCheckoutItems(itemsToCheckout);
+    setCheckoutDiscounts(selectedDiscounts);
+    setSelectedItems(updatedSelectedItems);
     setTotalPrice(totalPrice);
     setTotalRate(totalRate);
     setTotalAmount(totalAmount);
 
-    setDataLocalStorage('checkoutItems', selectedItems);
+    setDataLocalStorage('checkoutItems', itemsToCheckout);
     setDataLocalStorage('checkoutDiscounts', selectedDiscounts);
+    setDataLocalStorage('selectedItems', updatedSelectedItems);
     setDataLocalStorage('totalPrice', totalPrice);
     setDataLocalStorage('totalRate', totalRate);
     setDataLocalStorage('totalAmount', totalAmount);
+  };
+
+  const completedSelections = () => {
+    checkoutUpdates(selectedItems, selectedDiscounts);
+  };
+
+  const completedUpdateCount = () => {
+    checkoutUpdates(updateCountItems, selectedDiscounts);
+  };
+
+  const removeItem = (id: string) => {
+    const updatedSelectedItems = selectedItems.filter((item) => item.id !== id);
+    const itemsToCheckout = checkoutItems.filter((item) => item.id !== id);
+
+    setSelectedItems(updatedSelectedItems);
+    checkoutUpdates(itemsToCheckout, selectedDiscounts);
   };
 
   const cancelSelected = () => {
     setSelectedItems(checkoutItems);
     setSelectedDiscounts(checkoutDiscounts);
   };
+
+  useEffect(() => {
+    const updatedSelectedItems = checkoutItems.filter((item) =>
+      selectedItems.find((selectedItem) => selectedItem.id === item.id),
+    );
+    setSelectedItems(updatedSelectedItems);
+  }, [checkoutItems]);
 
   useEffect(() => {
     setDataLocalStorage('selectedItems', selectedItems);
@@ -133,12 +184,16 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         selectedDiscounts,
         checkoutItems,
         checkoutDiscounts,
+        updateCountItems,
         totalPrice,
         totalRate,
         totalAmount,
         selectItem,
         selectDiscount,
+        handleItemCount,
         completedSelections,
+        completedUpdateCount,
+        removeItem,
         cancelSelected,
       }}
     >

@@ -1,6 +1,6 @@
 import { useViewContext } from 'contexts/ViewContext';
 import TotalAmount from './TotalAmount';
-import NextStepButton from './NextStepButton';
+import ResetButton from './ResetButton';
 import CompleteButton from './CompleteButton';
 
 const Footer = () => {
@@ -13,7 +13,7 @@ const Footer = () => {
       {currentView === 'main' ? (
         <>
           <TotalAmount />
-          <NextStepButton />
+          <ResetButton />
         </>
       ) : (
         <CompleteButton />
