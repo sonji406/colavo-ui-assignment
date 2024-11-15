@@ -18,11 +18,13 @@ interface CartContextProps {
   selectedDiscounts: Discount[];
   checkoutItems: Item[];
   checkoutDiscounts: Discount[];
+  updateCountItems: Item[];
   totalPrice: number;
   totalRate: number;
   totalAmount: number;
   selectItem: (item: Item) => void;
   selectDiscount: (discount: Discount) => void;
+  handleItemCount: (id: string, count: number) => void;
   completedSelections: () => void;
   cancelSelected: () => void;
 }
@@ -47,6 +49,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
   const [checkoutDiscounts, setCheckoutDiscounts] = useState<Discount[]>(() =>
     getDataLocalStorage('checkoutDiscounts', []),
   );
+  const [updateCountItems, setUpdateCountItems] = useState<Item[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(() => getDataLocalStorage('totalPrice', 0));
   const [totalRate, setTotalRate] = useState<number>(() => getDataLocalStorage('totalRate', 0));
   const [totalAmount, setTotalAmount] = useState<number>(() =>
@@ -81,11 +84,23 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const handleItemCount = (id: string, updateCount: number) => {
+    setUpdateCountItems(() => {
+      const updatedItems = checkoutItems.map((item) =>
+        item.id === id ? { ...item, count: updateCount } : item,
+      );
+
+      return updatedItems;
+    });
+  };
+
   const completedSelections = () => {
-    setCheckoutItems(selectedItems);
+    const itemsToCheckout = updateCountItems.length > 0 ? updateCountItems : selectedItems;
+
+    setCheckoutItems(itemsToCheckout);
     setCheckoutDiscounts(selectedDiscounts);
 
-    const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+    const totalPrice = selectedItems.reduce((sum, item) => sum + item.price * item.count, 0);
 
     const totalRate =
       Math.round(selectedDiscounts.reduce((sum, discount) => sum + discount.rate, 0) * 100) / 100;
@@ -133,11 +148,13 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         selectedDiscounts,
         checkoutItems,
         checkoutDiscounts,
+        updateCountItems,
         totalPrice,
         totalRate,
         totalAmount,
         selectItem,
         selectDiscount,
+        handleItemCount,
         completedSelections,
         cancelSelected,
       }}
